@@ -43,9 +43,9 @@ class ProductSchema(ma.Schema):
 
 class CashbackSchema(ma.Schema):
     sold_at = fields.DateTime(required=False)
-    customer = fields.Nested(CustomerSchema)
+    customer = fields.Nested(CustomerSchema, required=True)
     total = fields.Float(required=True)
-    products = fields.Nested(ProductSchema, many=True)
+    products = fields.Nested(ProductSchema, many=True, required=True)
 
     class Meta:
         fields = (
