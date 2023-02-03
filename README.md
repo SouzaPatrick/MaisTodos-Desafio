@@ -1,6 +1,11 @@
 TODO
 - [x] Function to validate CPF
-- [ ] [Validate input data](https://www.youtube.com/watch?v=Y_GQdxRSnIg)
+- [x] [Validate input data](https://www.youtube.com/watch?v=Y_GQdxRSnIg)
+- [x] Perform the sum of received values and check if they are the same as the total coming in the payload
+  - I validated taking into account that the value is being sent and this was a requirement at the time of project construction. Particularly, I wouldn't even return an error, I would just add the products at this moment and pass the sum value forward to avoid a bottleneck, as it is a challenge, I just validated it and returned the error.
+- [ ] Validate the sale date of the products
+- [ ] Create a database in sqlite
+- [ ] Automate database creation in sqlite
 
 ##### Run httpie in terminal, for test
 

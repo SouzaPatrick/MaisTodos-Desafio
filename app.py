@@ -10,7 +10,7 @@ configure_app(app)
 @app.route("/api/cashback", methods=['POST'])
 def cashback():
     try:
-        errors = CashbackSchema().validate(request.get_json())
+        errors = CashbackSchema().load(request.get_json())
 
         if errors:
             return jsonify(errors), 400
