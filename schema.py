@@ -1,11 +1,14 @@
 from typing import NoReturn
+
 from flask_marshmallow import Marshmallow
 from flask_marshmallow.fields import fields
-from person_docs_helper import validate_cpf
+from marshmallow import post_load, validates
 from marshmallow.exceptions import ValidationError
-from marshmallow import validates, post_load
+
+from person_docs_helper import validate_cpf
 
 ma = Marshmallow()
+
 
 class CustomerSchema(ma.Schema):
     document = fields.Str(required=True)
@@ -13,14 +16,14 @@ class CustomerSchema(ma.Schema):
 
     class Meta:
         fields = (
-            'document',
-            'name',
+            "document",
+            "name",
         )
 
-    @validates('document')
+    @validates("document")
     def validate_document(self, document):
         if not validate_cpf(document):
-            raise ValidationError({'error_message': 'Invalid document number'})
+            raise ValidationError({"error_message": "Invalid document number"})
         return document
 
 
@@ -31,9 +34,9 @@ class ProductSchema(ma.Schema):
 
     class Meta:
         fields = (
-            'type',
-            'value',
-            'qty',
+            "type",
+            "value",
+            "qty",
         )
 
 
@@ -45,21 +48,26 @@ class CashbackSchema(ma.Schema):
 
     class Meta:
         fields = (
-            'sold_at',
-            'customer',
-            'total',
-            'products',
+            "sold_at",
+            "customer",
+            "total",
+            "products",
         )
 
     @post_load
     def validate(self, data, **kwargs) -> NoReturn:
         total_products: float = 0.0
-        products: dict = data.get('products')
+        products: dict = data.get("products")
         for product in products:
-            total_products += float(product.get('value')*product.get('qty'))
+            total_products += float(product.get("value") * product.get("qty"))
 
-        if total_products != data.get('total'):
-            raise ValidationError({'error_message': 'The total value informed is not in accordance with the value of the sum of the products sold'})
+        if total_products != data.get("total"):
+            raise ValidationError(
+                {
+                    "error_message": "The total value informed is not in accordance "
+                    "with the value of the sum of the products sold"
+                }
+            )
 
 
 def configure_app(app) -> NoReturn:
