@@ -8,7 +8,7 @@ TODO
 - [x] Validate product type
 - [x] Add cashback for each product
 - [x] Calculate cashback
-- [ ] Send the calculated cashback to the Mais Todos api
+- [x] Send the calculated cashback to the Mais Todos api
 - [ ] Save all requests and responses
 - [ ] Automate database creation in sqlite
 - [ ] Create unit tests
