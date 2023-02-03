@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import NoReturn
 
 from flask_marshmallow import Marshmallow
@@ -41,7 +42,7 @@ class ProductSchema(ma.Schema):
 
 
 class CashbackSchema(ma.Schema):
-    sold_at = fields.Str(required=False)
+    sold_at = fields.DateTime(required=False)
     customer = fields.Nested(CustomerSchema)
     total = fields.Float(required=True)
     products = fields.Nested(ProductSchema, many=True)
@@ -53,6 +54,16 @@ class CashbackSchema(ma.Schema):
             "total",
             "products",
         )
+
+    @validates("sold_at")
+    def validate_sold_at(self, sold_at):
+        if datetime.now() < sold_at:
+            raise ValidationError(
+                {
+                    "error_message": "The date entered cannot be accepted as it is in the future"
+                }
+            )
+        return sold_at
 
     @post_load
     def validate(self, data, **kwargs) -> NoReturn:
