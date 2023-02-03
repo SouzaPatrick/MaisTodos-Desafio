@@ -6,6 +6,10 @@ TODO
 - [x] Validate the sale date of the products
 - [x] [Create a database in sqlite](https://www.youtube.com/watch?v=3h8K29U5_HA)
 - [x] Validate product type
+- [x] Add cashback for each product
+- [ ] Calculate cashback
+- [ ] Send the calculated cashback to the Mais Todos api
+- [ ] Save all requests and responses
 - [ ] Automate database creation in sqlite
 
 ##### Run httpie in terminal, for test

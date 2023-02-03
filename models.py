@@ -8,7 +8,8 @@ engine = create_engine("sqlite:///database.db")
 
 class ProductType(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    nome: str
+    name: str
+    cashback_percentage: int
 
 
 # Create the database
