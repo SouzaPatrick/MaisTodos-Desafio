@@ -6,6 +6,7 @@ from flask_marshmallow.fields import fields
 from marshmallow import post_load, validates
 from marshmallow.exceptions import ValidationError
 
+from db_function import exist_product_type
 from person_docs_helper import validate_cpf
 
 ma = Marshmallow()
@@ -39,6 +40,14 @@ class ProductSchema(ma.Schema):
             "value",
             "qty",
         )
+
+    @validates("type")
+    def validate_type(self, type: str):
+        if not exist_product_type(type=type):
+            raise ValidationError(
+                {"error_message": f"The {type} product type is invalid"}
+            )
+        return type
 
 
 class CashbackSchema(ma.Schema):
