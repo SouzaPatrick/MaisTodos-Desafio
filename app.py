@@ -2,6 +2,7 @@ from typing import Optional
 
 from flask import Flask, jsonify, request
 from marshmallow.exceptions import ValidationError
+from requests import Response, post
 
 from db_function import get_products
 from models import ProductType
@@ -33,8 +34,24 @@ def cashback_calculate(products_data: list[dict]) -> float:
 
 
 def send_cashback(cashback_value: float, document: str) -> dict:
+    payload = {"document": document, "cashback": cashback_value}
+    url = "https://5efb30ac80d8170016f7613d.mockapi.io/api/mock/Cashback"
+    headers: dict = {
+        "Content-Type": "application/json;charset=UTF-8",
+    }
+    try:
+        response: Optional[Response] = post(url=url, json=payload, headers=headers)
+    except Exception:
+        # TODO Save the error when creating the log saving mechanism
+        response: Optional[Response] = None
 
-    return {}
+    response_data: dict = {}
+    if response is not None:
+        if response.status_code == 200:
+            response_data: dict = response.json()
+        else:
+            response_data["error_message"] = str(response.text).replace('"', "")
+    return response_data
 
 
 @app.route("/api/cashback", methods=["POST"])
@@ -48,10 +65,11 @@ def cashback():
         return jsonify(error.normalized_messages()), 400
 
     # Cashback calculate
-    cashback_calculate(products_data=schema.get("products"))
-    # TODO Send the calculated cashback to the Mais Todos api
-    # response_api: dict = send_cashback(
-    #     cashback_value=cashback_value, document=schema.get("customer").get("document")
-    # )
-
-    return jsonify({"message": "ok"}), 200
+    cashback_value: float = cashback_calculate(products_data=schema.get("products"))
+    # Send the calculated cashback to the Mais Todos api
+    response_api = send_cashback(
+        cashback_value=cashback_value, document=schema.get("customer").get("document")
+    )
+    if response_api.get("error_message", None) is None:
+        return jsonify({"message": "ok"}), 200
+    return jsonify(response_api), 400
