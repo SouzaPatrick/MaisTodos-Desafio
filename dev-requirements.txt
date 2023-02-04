@@ -6,6 +6,10 @@ black  # https://github.com/psf/black
 coverage  # https://github.com/nedbat/coveragepy
 pre-commit  # https://github.com/pre-commit/pre-commit
 
+# Test
+pytest==7.2.1
+pytest-mock==3.10.0
+
 # Others
 flask-marshmallow==0.14.0
 Flask==2.2.2
