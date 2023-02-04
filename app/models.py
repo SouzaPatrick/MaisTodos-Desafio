@@ -2,10 +2,9 @@ import json
 from datetime import datetime
 from typing import Optional
 
-from sqlmodel import JSON, Column, Field, Session, SQLModel, create_engine
+from sqlmodel import JSON, Column, Field, Session, SQLModel
 
-# Create database engine
-engine = create_engine("sqlite:///database.db")
+from app.database import engine
 
 
 class ProductType(SQLModel, table=True):
@@ -54,7 +53,3 @@ class LogApi(SQLModel, table=True):
             session.refresh(log_api)
 
         return True
-
-
-# Create the database
-SQLModel.metadata.create_all(engine)

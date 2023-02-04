@@ -1,15 +1,15 @@
 from typing import Optional
 
-from flask import Flask, jsonify, request
+from flask import jsonify, request
 from marshmallow.exceptions import ValidationError
 from requests import Response, post
 
-from db_function import get_products_by_types
-from models import LogApi, ProductType
-from schema import CashbackSchema, configure_app
+from app import create_app
+from app.db_function import get_products_by_types
+from app.models import LogApi, ProductType
+from app.schema import CashbackSchema
 
-app = Flask(__name__)
-configure_app(app)
+app = create_app()
 
 
 def cashback_calculate(products_data: list[dict]) -> float:

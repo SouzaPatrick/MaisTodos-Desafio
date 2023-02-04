@@ -1,6 +1,19 @@
 from sqlmodel import Session, col, select
 
-from models import ProductType, engine
+from .models import ProductType, engine
+
+
+def create_products_type_from_propulate_db():
+    products_type: list[ProductType] = [
+        ProductType(name="A", cashback_percentage=10),
+        ProductType(name="B", cashback_percentage=20),
+        ProductType(name="C", cashback_percentage=30),
+    ]
+
+    with Session(engine) as session:
+        for product_type in products_type:
+            session.add(product_type)
+            session.commit()
 
 
 def exist_product_type(type: str) -> bool:
