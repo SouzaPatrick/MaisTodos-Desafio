@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from typing import Optional
 
 from sqlmodel import JSON, Column, Field, Session, SQLModel, create_engine
@@ -15,6 +16,7 @@ class ProductType(SQLModel, table=True):
 
 class LogApi(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    created_at: datetime = Field(default_factory=datetime.now, nullable=False)
     app: str
     method: str
     request: dict = Field(default={}, sa_column=Column(JSON))
