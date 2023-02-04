@@ -51,16 +51,16 @@ def send_cashback(cashback_value: float, document: str) -> dict:
             response_data: dict = response.json()
         else:
             response_data["error_message"] = str(response.text).replace('"', "")
+
+        # Save log API
+        LogApi.save_log(
+            _request=response.request,
+            response_json=response_data,
+            app="MaisTodosAPI",
+            status_code=response.status_code,
+        )
     else:
         response_data["error_message"] = "Error sending cashback to MaisTodos API"
-
-    # Save log API
-    LogApi.save_log(
-        _request=response.request,
-        response_json=response_data,
-        app="MaisTodosAPI",
-        status_code=response.status_code,
-    )
 
     # response_data = {
     #     "createdAt": "2022-12-22T15:33:05.244Z",
@@ -78,23 +78,27 @@ def cashback():
     try:
         schema: Optional[dict] = CashbackSchema().load(data)
         if schema is None:
+            response_json = {
+                "error_message": "It was not possible to validate the sent data, invalid data"
+            }
             # Save log API
             LogApi.save_log(
                 _request=request,
-                response_json=dict(schema),
+                response_json=response_json,
                 app="localhost-cashback",
                 status_code=400,
             )
-            return jsonify(schema), 400
+            return jsonify(response_json), 400
     except ValidationError as error:
+        response_json = error.normalized_messages()
         # Save log API
         LogApi.save_log(
             _request=request,
-            response_json=dict(error.normalized_messages()),
+            response_json=response_json,
             app="localhost-cashback",
             status_code=400,
         )
-        return jsonify(error.normalized_messages()), 400
+        return jsonify(response_json), 400
 
     # Cashback calculate
     cashback_value: float = cashback_calculate(products_data=schema.get("products"))
