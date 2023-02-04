@@ -2,68 +2,14 @@ from typing import Optional
 
 from flask import jsonify, request
 from marshmallow.exceptions import ValidationError
-from requests import Response, post
 
 from app import create_app
-from app.db_function import get_products_by_types
-from app.models import LogApi, ProductType
+from app.models import LogApi
 from app.schema import CashbackSchema
+from tools.cashback import cashback_calculate
+from tools.mais_todos import send_cashback
 
 app = create_app()
-
-
-def cashback_calculate(products_data: list[dict]) -> float:
-    products_type: list[ProductType] = get_products_by_types(products_data)
-
-    cashback: float = 0.0
-    for product_data in products_data:
-        for product_type in products_type:
-            if product_data.get("type") == product_type.name:
-                cashback: float = cashback + (
-                    (product_data.get("value") * product_data.get("qty"))
-                    * product_type.cashback_percentage
-                    / 100
-                )
-    return cashback
-
-
-def send_cashback(cashback_value: float, document: str) -> dict:
-    payload = {"document": document, "cashback": cashback_value}
-    url = "https://5efb30ac80d8170016f7613d.mockapi.io/api/mock/Cashback"
-    headers: dict = {
-        "Content-Type": "application/json;charset=UTF-8",
-    }
-    try:
-        response: Optional[Response] = post(url=url, json=payload, headers=headers)
-    except Exception:
-        # TODO Save the error when creating the log saving mechanism
-        response: Optional[Response] = None
-
-    response_data: dict = {}
-    if response is not None:
-        if response.status_code == 200:
-            response_data: dict = response.json()
-        else:
-            response_data["error_message"] = str(response.text).replace('"', "")
-
-        # Save log API
-        LogApi.save_log(
-            _request=response.request,
-            response_json=response_data,
-            app="MaisTodosAPI",
-            status_code=response.status_code,
-        )
-    else:
-        response_data["error_message"] = "Error sending cashback to MaisTodos API"
-
-    # response_data = {
-    #     "createdAt": "2022-12-22T15:33:05.244Z",
-    #     "message": "Cashback criado com sucesso!",
-    #     "id": "1",
-    #     "document": "33535353535",
-    #     "cashback": "10",
-    # }
-    return response_data
 
 
 @app.route("/api/cashback", methods=["POST"])

@@ -1,3 +1,5 @@
+-r base-requirements.txt
+
 # Code quality
 # ------------------------------------------------------------------------------
 flake8 # https://github.com/PyCQA/flake8
@@ -9,11 +11,3 @@ pre-commit  # https://github.com/pre-commit/pre-commit
 # Test
 pytest==7.2.1
 pytest-mock==3.10.0
-
-# Others
-flask-marshmallow==0.14.0
-Flask==2.2.2
-marshmallow==3.19.0
-validate-docbr==1.10.0
-httpie==3.2.1
-sqlmodel==0.0.8

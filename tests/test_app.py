@@ -1,7 +1,7 @@
 from typing import NoReturn
 
 from app.models import ProductType
-from app_old import cashback_calculate
+from tools.cashback import cashback_calculate
 
 
 def test_cashback_calculate(mocker) -> NoReturn:
@@ -10,7 +10,7 @@ def test_cashback_calculate(mocker) -> NoReturn:
         {"type": "C", "value": 10.00, "qty": 9},
     ]
     mocker.patch(
-        "app_old.get_products_by_types",
+        "tools.cashback.get_products_by_types",
         return_value=[
             ProductType(cashback_percentage=10, name="A", id=1),
             ProductType(cashback_percentage=30, name="C", id=3),
