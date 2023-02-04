@@ -1,6 +1,6 @@
 import pytest
 
-from app.person_docs_helper import mask_cpf, remove_mask_cpf, validate_cpf
+from tools.person_docs_helper import mask_cpf, remove_mask_cpf, validate_cpf
 
 
 def test_remove_mask_cpf():
