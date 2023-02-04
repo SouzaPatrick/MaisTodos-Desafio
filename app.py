@@ -5,7 +5,7 @@ from marshmallow.exceptions import ValidationError
 from requests import Response, post
 
 from db_function import get_products
-from models import ProductType
+from models import LogApi, ProductType
 from schema import CashbackSchema, configure_app
 
 app = Flask(__name__)
@@ -51,6 +51,24 @@ def send_cashback(cashback_value: float, document: str) -> dict:
             response_data: dict = response.json()
         else:
             response_data["error_message"] = str(response.text).replace('"', "")
+    else:
+        response_data["error_message"] = "Error sending cashback to MaisTodos API"
+
+    # Save log API
+    LogApi.save_log(
+        _request=response.request,
+        response_json=response_data,
+        app="MaisTodosAPI",
+        status_code=response.status_code,
+    )
+
+    # response_data = {
+    #     "createdAt": "2022-12-22T15:33:05.244Z",
+    #     "message": "Cashback criado com sucesso!",
+    #     "id": "1",
+    #     "document": "33535353535",
+    #     "cashback": "10"
+    # }
     return response_data
 
 
@@ -60,16 +78,44 @@ def cashback():
     try:
         schema: Optional[dict] = CashbackSchema().load(data)
         if schema is None:
+            # Save log API
+            LogApi.save_log(
+                _request=request,
+                response_json=dict(schema),
+                app="localhost-cashback",
+                status_code=400,
+            )
             return jsonify(schema), 400
     except ValidationError as error:
+        # Save log API
+        LogApi.save_log(
+            _request=request,
+            response_json=dict(error.normalized_messages()),
+            app="localhost-cashback",
+            status_code=400,
+        )
         return jsonify(error.normalized_messages()), 400
 
     # Cashback calculate
     cashback_value: float = cashback_calculate(products_data=schema.get("products"))
-    # Send the calculated cashback to the Mais Todos api
+    # Send the calculated cashback to the Mais Todos API
     response_api = send_cashback(
         cashback_value=cashback_value, document=schema.get("customer").get("document")
     )
     if response_api.get("error_message", None) is None:
+        # Save log API
+        LogApi.save_log(
+            _request=request,
+            response_json={"message": "ok"},
+            app="localhost-cashback",
+            status_code=200,
+        )
         return jsonify({"message": "ok"}), 200
+    # Save log API
+    LogApi.save_log(
+        _request=request,
+        response_json=response_api,
+        app="localhost-cashback",
+        status_code=400,
+    )
     return jsonify(response_api), 400
