@@ -6,9 +6,9 @@ from marshmallow import post_load, validates
 from marshmallow.exceptions import ValidationError
 
 from app import ma
+from tools.person_docs_helper import remove_mask_cpf, validate_cpf
 
 from .db_function import exist_product_type
-from .person_docs_helper import remove_mask_cpf, validate_cpf
 
 
 class CustomerSchema(ma.Schema):

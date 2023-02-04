@@ -3,16 +3,15 @@ from typing import Optional
 from flask import jsonify, request
 from marshmallow.exceptions import ValidationError
 
-from app import create_app
 from app.models import LogApi
 from app.schema import CashbackSchema
 from tools.cashback import cashback_calculate
 from tools.mais_todos import send_cashback
 
-app = create_app()
+from . import api
 
 
-@app.route("/api/cashback", methods=["POST"])
+@api.route("/api/cashback", methods=["POST"])
 def cashback():
     data: dict = request.get_json()
     try:
@@ -50,11 +49,11 @@ def cashback():
         # Save log API
         LogApi.save_log(
             _request=request,
-            response_json={"message": "ok"},
+            response_json={"message": "success"},
             app="localhost-cashback",
             status_code=200,
         )
-        return jsonify({"message": "ok"}), 200
+        return jsonify(), 200
     # Save log API
     LogApi.save_log(
         _request=request,
@@ -63,3 +62,8 @@ def cashback():
         status_code=400,
     )
     return jsonify(response_api), 400
+
+
+@api.route("/health-check")
+def health_check():
+    return jsonify({"message": "success"}), 200
