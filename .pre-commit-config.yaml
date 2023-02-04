@@ -1,3 +1,4 @@
+exclude: "^docs/|app/api/__init__.py"
 default_stages: [commit]
 
 repos:
