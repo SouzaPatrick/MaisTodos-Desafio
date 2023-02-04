@@ -13,6 +13,7 @@ TODO
 - [x] Calculate cashback
 - [x] Send the calculated cashback to the Mais Todos API
 - [x] Save all requests and responses
+  - I thought a lot about removing or obfuscating the CPF within the database, but because it was a challenge I decided to keep it for the evaluation
 - [ ] Refactor code
 - [ ] Automate database creation in sqlite
 - [ ] Create unit tests
