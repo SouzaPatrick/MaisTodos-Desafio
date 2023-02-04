@@ -4,7 +4,7 @@ from flask import Flask, jsonify, request
 from marshmallow.exceptions import ValidationError
 from requests import Response, post
 
-from db_function import get_products
+from db_function import get_products_by_types
 from models import LogApi, ProductType
 from schema import CashbackSchema, configure_app
 
@@ -13,13 +13,7 @@ configure_app(app)
 
 
 def cashback_calculate(products_data: list[dict]) -> float:
-    products_type_data: list[str] = []
-    for product_data in products_data:
-        products_type_data.append(product_data.get("type"))
-
-    products_type: list[ProductType] = get_products(
-        products_type_data=products_type_data
-    )
+    products_type: list[ProductType] = get_products_by_types(products_data)
 
     cashback: float = 0.0
     for product_data in products_data:
@@ -67,7 +61,7 @@ def send_cashback(cashback_value: float, document: str) -> dict:
     #     "message": "Cashback criado com sucesso!",
     #     "id": "1",
     #     "document": "33535353535",
-    #     "cashback": "10"
+    #     "cashback": "10",
     # }
     return response_data
 

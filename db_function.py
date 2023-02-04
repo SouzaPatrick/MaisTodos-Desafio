@@ -19,3 +19,15 @@ def get_products(products_type_data: list[str]) -> list[ProductType]:
         result = session.execute(query).scalars().all()
 
     return result
+
+
+def get_products_by_types(products_data: list[dict]) -> list[ProductType]:
+    products_type_data: list[str] = []
+    for product_data in products_data:
+        products_type_data.append(product_data.get("type"))
+
+    products_type: list[ProductType] = get_products(
+        products_type_data=products_type_data
+    )
+
+    return products_type
