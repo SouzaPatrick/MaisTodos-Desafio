@@ -21,7 +21,13 @@ pip install -r requirements/dev-requirements.txt
 Populate the database
 ```bash
 make install
+
+DB successfully reset
+Create user test: 'username'='maistodos' 'password'='maistodos'
+Authentication through Basic Auth
 ```
+Just below the command to populate the database there is a list of everything that was done, it also indicates the username and password of the user to be used in your tests
+
 Start Flask
 ```bash
 python wsgi.py
