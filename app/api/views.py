@@ -53,14 +53,15 @@ def cashback(current_user):
         cashback_value=cashback_value, document=schema.get("customer").get("document")
     )
     if response_api.get("error_message", None) is None:
+        response_json = {"message": "success"}
         # Save log API
         LogApi.save_log(
             _request=request,
-            response_json={"message": "success"},
+            response_json=response_json,
             app="localhost-cashback",
             status_code=200,
         )
-        return jsonify(), 200
+        return jsonify(response_json), 200
     # Save log API
     LogApi.save_log(
         _request=request,
