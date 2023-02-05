@@ -5,9 +5,9 @@ from marshmallow.exceptions import ValidationError
 
 from app.models import LogApi
 from app.schema import CashbackSchema
+from tools.auth import auth, token_required
 from tools.cashback import cashback_calculate
 from tools.mais_todos import send_cashback
-from tools.auth import auth, token_required
 
 from . import api
 

@@ -17,10 +17,8 @@ def create_products_type_from_propulate_db():
 
 
 def create_user_test():
-    user: User = User(
-        username='maistodos'
-    )
-    user.generate_password('maistodos')
+    user: User = User(username="maistodos")
+    user.generate_password("maistodos")
 
     with Session(engine) as session:
         session.add(user)

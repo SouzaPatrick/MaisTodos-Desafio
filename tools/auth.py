@@ -3,24 +3,22 @@ from functools import wraps
 
 import jwt
 from flask import jsonify, request
-from werkzeug.security import check_password_hash
-
-# from app import app
 
 from app.db_function import get_user_by_username
 from app.models import User
+
+# from app import app
 
 
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.headers.get('Authorization').lstrip('Bearer').strip()
-        # token = request.args.get("token")
+        token = request.headers.get("Authorization").lstrip("Bearer").strip()
         if not token:
             return jsonify({"message": "token is missing", "data": []}), 401
         try:
             # data = jwt.decode(token, app.config["SECRET_KEY"])
-            data = jwt.decode(token, '123', algorithms=['HS256'])
+            data = jwt.decode(token, "123", algorithms=["HS256"])
             current_user = get_user_by_username(username=data["username"])
         except:
             return jsonify({"message": "token is invalid or expired", "data": []}), 401
@@ -52,7 +50,7 @@ def auth():
                 "exp": datetime.datetime.now() + datetime.timedelta(hours=12),
             },
             # app.config["SECRET_KEY"],
-            '123',
+            "123",
         )
         return jsonify(
             {
