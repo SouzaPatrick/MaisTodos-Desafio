@@ -7,12 +7,19 @@ from app.models import LogApi
 from app.schema import CashbackSchema
 from tools.cashback import cashback_calculate
 from tools.mais_todos import send_cashback
+from tools.auth import auth, token_required
 
 from . import api
 
 
+@api.route("/api/login", methods=["POST"])
+def login():
+    return auth()
+
+
 @api.route("/api/cashback", methods=["POST"])
-def cashback():
+@token_required
+def cashback(current_user):
     data: dict = request.get_json()
     try:
         schema: Optional[dict] = CashbackSchema().load(data)

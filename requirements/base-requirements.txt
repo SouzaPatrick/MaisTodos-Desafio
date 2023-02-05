@@ -1,3 +1,7 @@
+# Security
+Werkzeug==2.2.2
+PyJWT==2.6.0
+
 # Others
 flask-marshmallow==0.14.0
 Flask==2.2.2

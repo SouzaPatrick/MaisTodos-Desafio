@@ -15,8 +15,11 @@ TODO
 - [x] Save all requests and responses
   - I thought a lot about removing or obfuscating the CPF within the database, but because it was a challenge I decided to keep it for the evaluation
 - [x] Refactor code
+- [x] [Login](https://medium.com/@hedgarbezerra35/api-rest-com-flask-autenticacao-25d99b8679b6)
+  - [ ] Authorization
+  - I'm relying on the book I have, [Web Development with Flask](https://www.amazon.com.br/Flask-Web-Development-Miquel-Grinberg/dp/1491991739)
 - [ ] [Use Docker](https://github.com/docker/awesome-compose/tree/master/nginx-wsgi-flask)
-- [ ] Automate database creation in sqlite
+- [x] Automate database creation in sqlite
 - [ ] Create unit tests
 
 ##### Run httpie in terminal, for test

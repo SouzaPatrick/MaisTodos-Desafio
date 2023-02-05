@@ -2,9 +2,22 @@ import json
 from datetime import datetime
 from typing import Optional
 
-from sqlmodel import JSON, Column, Field, Session, SQLModel
+from sqlmodel import JSON, Column, Field, Session, SQLModel, String
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.database import engine
+
+
+class User(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    username: str = Field(sa_column=Column("username", String, unique=True))
+    password_hash: str
+
+    def generate_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 
 class ProductType(SQLModel, table=True):

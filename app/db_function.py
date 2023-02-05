@@ -1,6 +1,6 @@
 from sqlmodel import Session, col, select
 
-from .models import ProductType, engine
+from .models import ProductType, User, engine
 
 
 def create_products_type_from_propulate_db():
@@ -14,6 +14,17 @@ def create_products_type_from_propulate_db():
         for product_type in products_type:
             session.add(product_type)
             session.commit()
+
+
+def create_user_test():
+    user: User = User(
+        username='maistodos'
+    )
+    user.generate_password('maistodos')
+
+    with Session(engine) as session:
+        session.add(user)
+        session.commit()
 
 
 def exist_product_type(type: str) -> bool:
@@ -44,3 +55,12 @@ def get_products_by_types(products_data: list[dict]) -> list[ProductType]:
     )
 
     return products_type
+
+
+def get_user_by_username(username):
+    query = select(User).where(User.username == username)
+
+    with Session(engine) as session:
+        result = session.execute(query).scalars().one()
+
+    return result
