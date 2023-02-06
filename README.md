@@ -6,19 +6,19 @@
 ## Start project
 I recommend creating a venv to install all the libs needed for the code to run and not have conflicts with the ones you already have on your PC
 
-Create a venv with the command below
+##### Create a venv with the command below
 ```bash
 python -m venv venv
 ```
-Activate the venv you just created
+##### Activate the venv you just created
 ```bash
 source venv/bin/activate
 ```
-Install the necessary libs
+##### Install the necessary libs
 ```bash
 pip install -r requirements/dev-requirements.txt
 ```
-Populate the database
+##### Populate the database
 ```bash
 make install
 
@@ -28,11 +28,14 @@ Authentication through Basic Auth
 ```
 Just below the command to populate the database there is a list of everything that was done, it also indicates the username and password of the user to be used in your tests
 
-Start Flask
+##### Start Flask
+```bash
+gunicorn -w 3 -t 60 -b 0.0.0.0:5000 wsgi:app
+```
+###### Or you can boot in debug mode
 ```bash
 python wsgi.py
 ```
-
 ## Rotes
 PS: To make it easier, I exported the [Postman collection](https://drive.google.com/drive/folders/1UD04eMe_aF2aHHJmRTCFw_3iMzDIypqt?usp=sharing), just use the Flask API
 In the login route, I used the ```Basic Auth```, sent in the ```header```. The body is sent empty
