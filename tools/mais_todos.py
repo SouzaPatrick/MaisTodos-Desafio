@@ -33,12 +33,4 @@ def send_cashback(cashback_value: float, document: str) -> dict:
         )
     else:
         response_data["error_message"] = "Error sending cashback to MaisTodos API"
-
-    # response_data = {
-    #     "createdAt": "2022-12-22T15:33:05.244Z",
-    #     "message": "Cashback criado com sucesso!",
-    #     "id": "1",
-    #     "document": "33535353535",
-    #     "cashback": "10",
-    # }
     return response_data
