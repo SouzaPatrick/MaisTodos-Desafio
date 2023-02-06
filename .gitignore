@@ -343,3 +343,4 @@ ffa_django/media/
 deploy.sh
 /ansible_data/inventory.yml
 /.aws/
+/database.db
