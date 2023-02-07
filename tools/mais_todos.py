@@ -2,11 +2,11 @@ from typing import Optional
 
 from requests import Response, post
 
-from app.models import LogApi
+from app.models import LogApi, User
 from tools.person_docs_helper import remove_mask_cpf
 
 
-def send_cashback(cashback_value: float, document: str) -> dict:
+def send_cashback(cashback_value: float, document: str, current_user: User) -> dict:
     payload = {"document": remove_mask_cpf(document), "cashback": cashback_value}
     url = "https://5efb30ac80d8170016f7613d.mockapi.io/api/mock/Cashback"
     headers: dict = {
@@ -29,7 +29,7 @@ def send_cashback(cashback_value: float, document: str) -> dict:
         LogApi.save_log(
             _request=response.request,
             response_json=response_data,
-            app="MaisTodosAPI",
+            user=current_user,
             status_code=response.status_code,
         )
     else:

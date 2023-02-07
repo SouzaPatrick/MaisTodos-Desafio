@@ -4,38 +4,13 @@
 - Possibility to run make commands (Makefile)
 
 ## Start project
-I recommend creating a venv to install all the libs needed for the code to run and not have conflicts with the ones you already have on your PC
-
-##### Create a venv with the command below
-```bash
-python -m venv venv
-```
-##### Activate the venv you just created
-```bash
-source venv/bin/activate
-```
-##### Install the necessary libs
-```bash
-pip install -r requirements/dev-requirements.txt
-```
-##### Populate the database
+##### Just enter the command below in the terminal
 ```bash
 make install
+```
+###### The command above: start the container, install the dependencies and generate the populated database
 
-DB successfully reset
-Create user test: 'username'='maistodos' 'password'='maistodos'
-Authentication through Basic Auth
-```
-Just below the command to populate the database there is a list of everything that was done, it also indicates the username and password of the user to be used in your tests
-
-##### Start Flask
-```bash
-gunicorn -w 3 -t 60 -b 0.0.0.0:5000 wsgi:app
-```
-###### Or you can boot in debug mode
-```bash
-python wsgi.py
-```
+###### [Run project with venv](docs/start_project_venv.md)
 ## Rotes
 PS: To make it easier, I exported the [Postman collection](https://drive.google.com/drive/folders/1UD04eMe_aF2aHHJmRTCFw_3iMzDIypqt?usp=sharing), just use the Flask API
 In the login route, I used the ```Basic Auth```, sent in the ```header```. The body is sent empty
@@ -95,7 +70,13 @@ As the data sending API was offline at the time of project creation, the respons
 }
 ```
 
-#### All incoming and outgoing data as well as cashback calculations are kept in the database in the LogAPI table. For each request, just check it
+###### All incoming and outgoing data as well as cashback calculations are kept in the database in the LogAPI table. For each request, just check it
+
+## Run all tests on container
+```bash
+make test
+```
+###### PS: If the container is not running, run ```make up```
 
 ## Project creation logic
 #### TODO
@@ -117,17 +98,17 @@ As the data sending API was offline at the time of project creation, the respons
   - I thought a lot about removing or obfuscating the CPF within the database, but because it was a challenge I decided to keep it for the evaluation
 - [x] Refactor code
 - [x] [Login](https://medium.com/@hedgarbezerra35/api-rest-com-flask-autenticacao-25d99b8679b6)
-  - [ ] Authorization
-  - I'm relying on the book I have, [Web Development with Flask](https://www.amazon.com.br/Flask-Web-Development-Miquel-Grinberg/dp/1491991739)
+  - [x] Authorization
+    - As the project is intended to always be used as a means of authorization, only a flag in the user a ```send_cashback```
 - [x] Automate database creation in sqlite
 - [x] Create unit tests
+  - Running the tests and the application with the same global engine, I got the idea of using ```current_app```[daqui](https://blog.teclado.com/build-own-blog-platform-flask-python-part-1/).I liked SQLModel so much that I preferred to use it for this project, so there isn't much doc about it yet because the most used is pure SQLAlchemy.
 
 
 - #### Bonus
-- [ ] Add the user who requested the cashback in the LogAPI
+- [x] Add the user who requested the cashback in the LogAPI
 - [ ] Find an equivalent of Django's finalize response for Flask, and avoid so much LogAPI repetition
-- [ ] Use Docker
-- [ ] Deploy
+- [x] Use Docker
 
 #### Step by step
 The idea of creating an API that receives a payload and calculates the cashback and passes it on to another API is relatively simple. My idea in this project was to make it well structured, as if it were for my team.
@@ -135,5 +116,3 @@ The idea of creating an API that receives a payload and calculates the cashback 
 Every process and reasoning can be seen by the commits, in fact I was created from "zero", my mastery is in Django and as soon as I was informed that I couldn't use it I went straight to Flask. 2 years ago I created a Flask project that I believed was my apse, but I was completely wrong kkkkk, because when I was trying to reuse what I had written there... I saw that doing it from scratch would be better, it was like a legacy system. Everything was very complex, I basically needed an endpoint (this was what I thought at first and then I created others) the data validations were very tangled... anyway, I preferred to focus on "relearning" Flask.
 
 I prioritized making a well-structured and long-lasting project, implementing good practices, making it simple and easy to understand so that other devs who wanted to could continue with the work. As I said earlier, I created this project with the idea that it was for my team.
-
-Finally, I would like to have finalized everything that I added in TODO but unfortunately time did not allow it.
