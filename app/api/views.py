@@ -22,7 +22,15 @@ def login():
 def cashback(current_user: User):
     # Verify authotization
     if not current_user.send_cashback:
-        return jsonify({"error_message": "User without access permission"}), 403
+        response_json: dict = {"error_message": "User without access permission"}
+        # Save log API
+        LogApi.save_log(
+            _request=request,
+            response_json=response_json,
+            user=current_user,
+            status_code=403,
+        )
+        return jsonify(response_json), 403
     data: dict = request.get_json()
     try:
         schema: Optional[dict] = CashbackSchema().load(data)

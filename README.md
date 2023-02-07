@@ -116,5 +116,3 @@ The idea of creating an API that receives a payload and calculates the cashback 
 Every process and reasoning can be seen by the commits, in fact I was created from "zero", my mastery is in Django and as soon as I was informed that I couldn't use it I went straight to Flask. 2 years ago I created a Flask project that I believed was my apse, but I was completely wrong kkkkk, because when I was trying to reuse what I had written there... I saw that doing it from scratch would be better, it was like a legacy system. Everything was very complex, I basically needed an endpoint (this was what I thought at first and then I created others) the data validations were very tangled... anyway, I preferred to focus on "relearning" Flask.
 
 I prioritized making a well-structured and long-lasting project, implementing good practices, making it simple and easy to understand so that other devs who wanted to could continue with the work. As I said earlier, I created this project with the idea that it was for my team.
-
-Finally, I would like to have finalized everything that I added in TODO but unfortunately time did not allow it.
