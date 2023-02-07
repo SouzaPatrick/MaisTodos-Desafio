@@ -31,3 +31,5 @@ gunicorn -w 3 -t 60 -b 0.0.0.0:5000 wsgi:app
 ```bash
 python wsgi.py
 ```
+
+###### Run all tests ```pytest -v --disable-pytest-warnings```
