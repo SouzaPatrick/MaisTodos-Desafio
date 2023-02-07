@@ -11,6 +11,7 @@ class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     username: str = Field(sa_column=Column("username", String, unique=True))
     password_hash: str
+    send_cashback: bool = Field(default=False)
 
     log_api: list["LogApi"] = Relationship(back_populates="user")
 

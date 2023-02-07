@@ -20,7 +20,7 @@ def create_products_type_from_propulate_db() -> NoReturn:
 
 
 def create_user_test():
-    user: User = User(username="maistodos")
+    user: User = User(username="maistodos", send_cashback=True)
     user.generate_password("maistodos")
 
     with Session(current_app.engine) as session:

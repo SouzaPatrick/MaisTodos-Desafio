@@ -3,7 +3,7 @@ from typing import Optional
 from flask import jsonify, request
 from marshmallow.exceptions import ValidationError
 
-from app.models import LogApi
+from app.models import LogApi, User
 from app.schema import CashbackSchema
 from tools.auth import auth, token_required
 from tools.cashback import cashback_calculate
@@ -19,7 +19,10 @@ def login():
 
 @api.route("/api/cashback", methods=["POST"])
 @token_required
-def cashback(current_user):
+def cashback(current_user: User):
+    # Verify authotization
+    if not current_user.send_cashback:
+        return jsonify({"error_message": "User without access permission"}), 403
     data: dict = request.get_json()
     try:
         schema: Optional[dict] = CashbackSchema().load(data)
