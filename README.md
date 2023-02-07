@@ -25,6 +25,9 @@ make install
 DB successfully reset
 Create user test: 'username'='maistodos' 'password'='maistodos'
 Authentication through Basic Auth
+.
+.
+.
 ```
 Just below the command to populate the database there is a list of everything that was done, it also indicates the username and password of the user to be used in your tests
 
@@ -126,8 +129,7 @@ As the data sending API was offline at the time of project creation, the respons
 - #### Bonus
 - [ ] Add the user who requested the cashback in the LogAPI
 - [ ] Find an equivalent of Django's finalize response for Flask, and avoid so much LogAPI repetition
-- [ ] Use Docker
-- [ ] Deploy
+- [x] Use Docker
 
 #### Step by step
 The idea of creating an API that receives a payload and calculates the cashback and passes it on to another API is relatively simple. My idea in this project was to make it well structured, as if it were for my team.
