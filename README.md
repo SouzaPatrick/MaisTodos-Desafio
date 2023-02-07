@@ -127,7 +127,7 @@ As the data sending API was offline at the time of project creation, the respons
 
 
 - #### Bonus
-- [ ] Add the user who requested the cashback in the LogAPI
+- [x] Add the user who requested the cashback in the LogAPI
 - [ ] Find an equivalent of Django's finalize response for Flask, and avoid so much LogAPI repetition
 - [x] Use Docker
 

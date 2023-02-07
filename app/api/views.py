@@ -31,7 +31,7 @@ def cashback(current_user):
             LogApi.save_log(
                 _request=request,
                 response_json=response_json,
-                app="localhost-cashback",
+                user=current_user,
                 status_code=400,
             )
             return jsonify(response_json), 400
@@ -41,7 +41,7 @@ def cashback(current_user):
         LogApi.save_log(
             _request=request,
             response_json=response_json,
-            app="localhost-cashback",
+            user=current_user,
             status_code=400,
         )
         return jsonify(response_json), 400
@@ -50,7 +50,9 @@ def cashback(current_user):
     cashback_value: float = cashback_calculate(products_data=schema.get("products"))
     # Send the calculated cashback to the Mais Todos API
     response_api = send_cashback(
-        cashback_value=cashback_value, document=schema.get("customer").get("document")
+        cashback_value=cashback_value,
+        document=schema.get("customer").get("document"),
+        current_user=current_user,
     )
     if response_api.get("error_message", None) is None:
         response_json = {"message": "success"}
@@ -58,7 +60,7 @@ def cashback(current_user):
         LogApi.save_log(
             _request=request,
             response_json=response_json,
-            app="localhost-cashback",
+            user=current_user,
             status_code=200,
         )
         return jsonify(response_json), 200
@@ -66,7 +68,7 @@ def cashback(current_user):
     LogApi.save_log(
         _request=request,
         response_json=response_api,
-        app="localhost-cashback",
+        user=current_user,
         status_code=400,
     )
     return jsonify(response_api), 400
