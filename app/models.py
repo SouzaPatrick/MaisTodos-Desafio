@@ -2,10 +2,9 @@ import json
 from datetime import datetime
 from typing import Optional
 
+from flask import current_app
 from sqlmodel import JSON, Column, Field, Relationship, Session, SQLModel, String
 from werkzeug.security import check_password_hash, generate_password_hash
-
-from app.database import engine
 
 
 class User(SQLModel, table=True):
@@ -67,7 +66,7 @@ class LogApi(SQLModel, table=True):
         except Exception:
             return False
 
-        with Session(engine) as session:
+        with Session(current_app.engine) as session:
             session.add(log_api)
             session.commit()
 

@@ -1,16 +1,19 @@
+from typing import NoReturn
+
+from flask import current_app
 from sqlmodel import Session, col, select
 
-from .models import ProductType, User, engine
+from .models import ProductType, User
 
 
-def create_products_type_from_propulate_db():
+def create_products_type_from_propulate_db() -> NoReturn:
     products_type: list[ProductType] = [
         ProductType(name="A", cashback_percentage=10),
         ProductType(name="B", cashback_percentage=20),
         ProductType(name="C", cashback_percentage=30),
     ]
 
-    with Session(engine) as session:
+    with Session(current_app.engine) as session:
         for product_type in products_type:
             session.add(product_type)
             session.commit()
@@ -20,14 +23,15 @@ def create_user_test():
     user: User = User(username="maistodos")
     user.generate_password("maistodos")
 
-    with Session(engine) as session:
+    with Session(current_app.engine) as session:
         session.add(user)
         session.commit()
+        session.refresh(user)
 
 
 def exist_product_type(type: str) -> bool:
     query = select(ProductType.name)
-    with Session(engine) as session:
+    with Session(current_app.engine) as session:
         result = session.execute(query).scalars().all()
 
     if type in result:
@@ -37,7 +41,7 @@ def exist_product_type(type: str) -> bool:
 
 def get_products(products_type_data: list[str]) -> list[ProductType]:
     query = select(ProductType).where(col(ProductType.name).in_(products_type_data))
-    with Session(engine) as session:
+    with Session(current_app.engine) as session:
         result = session.execute(query).scalars().all()
 
     return result
@@ -58,7 +62,7 @@ def get_products_by_types(products_data: list[dict]) -> list[ProductType]:
 def get_user_by_username(username):
     query = select(User).where(User.username == username)
 
-    with Session(engine) as session:
+    with Session(current_app.engine) as session:
         result = session.execute(query).scalars().one()
 
     return result
