@@ -1,13 +1,12 @@
 import datetime
 from functools import wraps
+from typing import Optional
 
 import jwt
 from flask import jsonify, request
 
 from app.db_function import get_user_by_username
 from app.models import User
-
-# from app import app
 
 
 def token_required(f):
@@ -39,7 +38,7 @@ def auth():
             ),
             401,
         )
-    user: User = get_user_by_username(auth.username)
+    user: Optional[User] = get_user_by_username(auth.username)
     if not user:
         return jsonify({"message": "user not found", "data": []}), 401
 

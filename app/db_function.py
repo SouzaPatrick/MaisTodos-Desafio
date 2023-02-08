@@ -1,6 +1,7 @@
-from typing import NoReturn
+from typing import NoReturn, Optional
 
 from flask import current_app
+from sqlalchemy.orm.exc import NoResultFound
 from sqlmodel import Session, col, select
 
 from .models import ProductType, User
@@ -59,10 +60,13 @@ def get_products_by_types(products_data: list[dict]) -> list[ProductType]:
     return products_type
 
 
-def get_user_by_username(username):
+def get_user_by_username(username) -> Optional[User]:
     query = select(User).where(User.username == username)
 
-    with Session(current_app.engine) as session:
-        result = session.execute(query).scalars().one()
+    try:
+        with Session(current_app.engine) as session:
+            result: Optional[User] = session.execute(query).scalars().one()
+    except NoResultFound:
+        result: Optional[User] = None
 
     return result
