@@ -3,7 +3,7 @@ CONTAINER_NAME=flask-python-sample
 
 ## @ Project
 .PHONY: install up generate_db down
-install: generate_db build up # Generate the backend image and upload ALL containers in the project
+install: build up generate_db # Generate the backend image and upload ALL containers in the project
 
 up: ## Starts ALL containers in the project
 	@docker-compose up -d
@@ -16,7 +16,7 @@ build: ## Create flask image from project
 	@sleep 10
 
 generate_db:
-	@python generate_db.py
+	@docker exec -i ${CONTAINER_NAME} sh -c "python generate_db.py"
 
 ## @ Pre-commit
 .PHONY: format

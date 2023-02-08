@@ -7,7 +7,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./database.db:/usr/src/app/database.db
+      - ./:/usr/src/app/
     healthcheck:
       test: [ "CMD-SHELL", "curl --silent --fail localhost:5000/health-check || exit 1" ]
       interval: 10s

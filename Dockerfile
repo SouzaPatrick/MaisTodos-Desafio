@@ -18,4 +18,5 @@ COPY --from=compile-image /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 COPY . /usr/src/app
 WORKDIR /usr/src/app
+RUN python generate_db.py
 CMD ["python", "wsgi.py"]
