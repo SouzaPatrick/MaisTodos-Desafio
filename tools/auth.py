@@ -14,13 +14,15 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = request.headers.get("Authorization").lstrip("Bearer").strip()
         if not token:
-            return jsonify({"message": "token is missing", "data": []}), 401
+            return jsonify({"error_message": "token is missing"}), 401
         try:
             # TODO replace "123" by app.config["SECRET_KEY"]
             data = jwt.decode(token, "123", algorithms=["HS256"])
             current_user = get_user_by_username(username=data["username"])
+            if not current_user:
+                return jsonify({"error_message": "token is invalid or expired"}), 401
         except:
-            return jsonify({"message": "token is invalid or expired", "data": []}), 401
+            return jsonify({"error_message": "token is invalid or expired"}), 401
         return f(current_user, *args, **kwargs)
 
     return decorated
@@ -32,7 +34,7 @@ def auth():
         return (
             jsonify(
                 {
-                    "message": "could not verify",
+                    "error_message": "could not verify",
                     "WWW-Authenticate": 'Basic auth="Login required"',
                 }
             ),
@@ -40,7 +42,7 @@ def auth():
         )
     user: Optional[User] = get_user_by_username(auth.username)
     if not user:
-        return jsonify({"message": "user not found", "data": []}), 401
+        return jsonify({"error_message": "user not found"}), 401
 
     if user and user.verify_password(auth.password):
         token: str = jwt.encode(
@@ -62,7 +64,7 @@ def auth():
     return (
         jsonify(
             {
-                "message": "could not verify",
+                "error_message": "could not verify",
                 "WWW-Authenticate": 'Basic auth="Login required"',
             }
         ),
