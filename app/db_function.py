@@ -20,7 +20,7 @@ def create_products_type_from_propulate_db() -> NoReturn:
             session.commit()
 
 
-def create_user_test():
+def create_user_test() -> User:
     user: User = User(username="maistodos", send_cashback=True)
     user.generate_password("maistodos")
 
@@ -28,6 +28,8 @@ def create_user_test():
         session.add(user)
         session.commit()
         session.refresh(user)
+
+    return user
 
 
 def exist_product_type(type: str) -> bool:
