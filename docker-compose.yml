@@ -6,6 +6,8 @@ services:
     restart: always
     ports:
       - "5000:5000"
+    volumes:
+      - ./database.db:/usr/src/app/database.db
     healthcheck:
       test: [ "CMD-SHELL", "curl --silent --fail localhost:5000/health-check || exit 1" ]
       interval: 10s
