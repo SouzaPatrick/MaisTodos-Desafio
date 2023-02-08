@@ -1,6 +1,7 @@
-from typing import NoReturn
+from typing import NoReturn, Optional
 
 from flask import current_app
+from sqlalchemy.orm.exc import NoResultFound
 from sqlmodel import Session, col, select
 
 from .models import ProductType, User
@@ -19,7 +20,7 @@ def create_products_type_from_propulate_db() -> NoReturn:
             session.commit()
 
 
-def create_user_test():
+def create_user_test() -> User:
     user: User = User(username="maistodos", send_cashback=True)
     user.generate_password("maistodos")
 
@@ -27,6 +28,8 @@ def create_user_test():
         session.add(user)
         session.commit()
         session.refresh(user)
+
+    return user
 
 
 def exist_product_type(type: str) -> bool:
@@ -59,10 +62,13 @@ def get_products_by_types(products_data: list[dict]) -> list[ProductType]:
     return products_type
 
 
-def get_user_by_username(username):
+def get_user_by_username(username) -> Optional[User]:
     query = select(User).where(User.username == username)
 
-    with Session(current_app.engine) as session:
-        result = session.execute(query).scalars().one()
+    try:
+        with Session(current_app.engine) as session:
+            result: Optional[User] = session.execute(query).scalars().one()
+    except NoResultFound:
+        result: Optional[User] = None
 
     return result

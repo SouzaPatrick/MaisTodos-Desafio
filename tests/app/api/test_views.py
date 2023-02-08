@@ -5,6 +5,11 @@ from flask import Response
 from app.db_function import create_products_type_from_propulate_db, create_user_test
 
 
+def test_health_check(client):
+    response: Response = client.get("/health-check")
+    assert response.status_code == 200
+
+
 def test_login(client, app):
     # Create user test
     with app.app_context():
@@ -19,7 +24,7 @@ def test_login(client, app):
     assert response.status_code == 200
 
 
-def test_cashbak(client, mocker, app):
+def test_cashback(client, mocker, app):
     # Populate db
     with app.app_context():
         create_user_test()

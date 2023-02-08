@@ -1,5 +1,6 @@
 import datetime
 from functools import wraps
+from typing import Optional
 
 import jwt
 from flask import jsonify, request
@@ -7,21 +8,35 @@ from flask import jsonify, request
 from app.db_function import get_user_by_username
 from app.models import User
 
-# from app import app
-
 
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.headers.get("Authorization").lstrip("Bearer").strip()
-        if not token:
-            return jsonify({"message": "token is missing", "data": []}), 401
         try:
-            # data = jwt.decode(token, app.config["SECRET_KEY"])
+            token = request.headers.get("Authorization").lstrip("Bearer").strip()
+        except AttributeError:
+            return (
+                jsonify({"error_message": "The token was not sent in the header"}),
+                401,
+            )
+        if not token:
+            return jsonify({"error_message": "Token is missing"}), 401
+        try:
+            # TODO replace "123" by app.config["SECRET_KEY"]
             data = jwt.decode(token, "123", algorithms=["HS256"])
             current_user = get_user_by_username(username=data["username"])
-        except:
-            return jsonify({"message": "token is invalid or expired", "data": []}), 401
+            if not current_user:
+                return jsonify({"error_message": "Token is invalid or expired"}), 401
+        except jwt.exceptions.DecodeError:
+            return (
+                jsonify(
+                    {
+                        "error_message": "Could not verify",
+                        "WWW-Authenticate": "Bearer Token required",
+                    }
+                ),
+                401,
+            )
         return f(current_user, *args, **kwargs)
 
     return decorated
@@ -33,15 +48,15 @@ def auth():
         return (
             jsonify(
                 {
-                    "message": "could not verify",
+                    "error_message": "Could not verify",
                     "WWW-Authenticate": 'Basic auth="Login required"',
                 }
             ),
             401,
         )
-    user: User = get_user_by_username(auth.username)
+    user: Optional[User] = get_user_by_username(auth.username)
     if not user:
-        return jsonify({"message": "user not found", "data": []}), 401
+        return jsonify({"error_message": "User not found"}), 401
 
     if user and user.verify_password(auth.password):
         token: str = jwt.encode(
@@ -49,7 +64,7 @@ def auth():
                 "username": user.username,
                 "exp": datetime.datetime.now() + datetime.timedelta(hours=12),
             },
-            # app.config["SECRET_KEY"],
+            # TODO replace "123" by app.config["SECRET_KEY"]
             "123",
         )
         return jsonify(
@@ -63,7 +78,7 @@ def auth():
     return (
         jsonify(
             {
-                "message": "could not verify",
+                "error_message": "Could not verify",
                 "WWW-Authenticate": 'Basic auth="Login required"',
             }
         ),
