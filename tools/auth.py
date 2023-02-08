@@ -16,7 +16,7 @@ def token_required(f):
         if not token:
             return jsonify({"message": "token is missing", "data": []}), 401
         try:
-            # data = jwt.decode(token, app.config["SECRET_KEY"])
+            # TODO replace "123" by app.config["SECRET_KEY"]
             data = jwt.decode(token, "123", algorithms=["HS256"])
             current_user = get_user_by_username(username=data["username"])
         except:
@@ -48,7 +48,7 @@ def auth():
                 "username": user.username,
                 "exp": datetime.datetime.now() + datetime.timedelta(hours=12),
             },
-            # app.config["SECRET_KEY"],
+            # TODO replace "123" by app.config["SECRET_KEY"]
             "123",
         )
         return jsonify(
